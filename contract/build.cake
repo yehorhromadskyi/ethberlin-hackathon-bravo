@@ -1,9 +1,19 @@
+var configuration = Argument("configuration", "Release");
+
 var target = Argument("target", "Default");
 
-Task("Default")
+Task("Run-tests")
     .Does(() => 
     {
-        Information("Cake hello world\r\n");
+        var settings = new DotNetCoreTestSettings
+        {
+            Configuration = configuration
+        };
+		
+        DotNetCoreTest("./", settings);
     });
+
+Task("Default")
+    .IsDependentOn("Run-tests");
 
 RunTarget(target);

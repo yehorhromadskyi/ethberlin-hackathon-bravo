@@ -55,7 +55,7 @@ namespace ContractTests
             var web3Geth = new Web3Geth(new ManagedAccount(Sender, Password));
 
             var txHash = await web3Geth.Eth.DeployContract.SendRequestAsync(
-                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(290000), BackupAddress, bounty, expirationDate);
+                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(290000), BackupAddress, expirationDate, bounty);
 
              var mined = await web3Geth.Miner.Start.SendRequestAsync();
              Assert.False(mined);

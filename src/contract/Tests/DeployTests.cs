@@ -8,6 +8,7 @@ using Nethereum.Geth;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Web3.Accounts.Managed;
+using Nethereum.ABI;
 
 namespace ContractTests
 {
@@ -48,45 +49,46 @@ namespace ContractTests
         [Fact]
         public async Task Contract_Deploys_Successfully()
         {
-             var web3Geth = new Web3Geth(new ManagedAccount(Sender, Password));
+            int bounty = 1000;
+            var expirationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            // var accounts = await web3Geth.Eth.Accounts.SendRequestAsync();
-            // if (accounts.Length == 0)
-            // {
-            //     await web3Geth.Personal.NewAccount.SendRequestAsync(Password);
-            //     accounts = await web3Geth.Eth.Accounts.SendRequestAsync();
-            // }
+            var web3Geth = new Web3Geth(new ManagedAccount(Sender, Password));
 
-            // var senderAddress = accounts.First();
+            var txHash = await web3Geth.Eth.DeployContract.SendRequestAsync(
+                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(290000), BackupAddress, bounty, expirationDate);
 
+             var mined = await web3Geth.Miner.Start.SendRequestAsync();
+             Assert.False(mined);
 
-            // var unlockAccountResult = await web3Geth.Personal.UnlockAccount.SendRequestAsync(senderAddress, Password, 120);
-            // Assert.True(unlockAccountResult);
+             TransactionReceipt receipt = null;
 
-            //var b = await web3Geth.Eth.GetBalance.SendRequestAsync(senderAddress);
+            do
+            {
+                await Task.Delay(5000);
+                receipt = await web3Geth.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(txHash);
+            } while (receipt == null);
 
-            var receipt = await web3Geth.Eth.DeployContract.SendRequestAndWaitForReceiptAsync(
-                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(900000));
-
-            // var mineResult = await web3Geth.Miner.Start.SendRequestAsync();
-            // Assert.False(mineResult);
-
-            // TransactionReceipt receipt = null;
-
-            // do
-            // {
-            //     await Task.Delay(5000);
-            //     receipt = await web3Geth.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
-            // } while (receipt == null);
-
-            // mineResult = await web3Geth.Miner.Stop.SendRequestAsync();
-            // Assert.True(mineResult);
+            mined = await web3Geth.Miner.Stop.SendRequestAsync();
+            Assert.True(mined);
 
             var contractAddress = receipt.ContractAddress;
+            _contract.Address = contractAddress;
+
             var contract = web3Geth.Eth.GetContract(_contract.Abi, contractAddress);
 
-            //var balance = await balanceOfFunction.CallAsync<int>(5);
+            var bountyFunction = contract.GetFunction("bounty");
+            var contractBounty = await bountyFunction.CallAsync<int>();
+
+            var backupAddressFunction = contract.GetFunction("backupAddress");
+            var contractBackupAddress = await backupAddressFunction.CallAsync<string>();
+
+            var expirationDateFunction = contract.GetFunction("expirationDate");
+            var contractExpirationDate = await expirationDateFunction.CallAsync<int>();
+
             Assert.True(contract != null);
+            Assert.Equal(bounty, contractBounty);
+            Assert.Equal(BackupAddress, contractBackupAddress);
+            Assert.Equal(expirationDate, contractExpirationDate);
         }
     }
 }

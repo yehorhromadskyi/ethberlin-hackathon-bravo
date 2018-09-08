@@ -50,12 +50,12 @@ namespace ContractTests
         public async Task Contract_Deploys_Successfully()
         {
             int bounty = 1000;
-            var expirationDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var inactivePeriod = TimeSpan.FromDays(50).Seconds;
 
             var web3Geth = new Web3Geth(new ManagedAccount(Sender, Password));
 
             var txHash = await web3Geth.Eth.DeployContract.SendRequestAsync(
-                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(290000), BackupAddress, expirationDate, bounty);
+                _contract.Abi, _contract.Bytecode, Sender, new HexBigInteger(290000), BackupAddress, inactivePeriod, bounty);
 
              var mined = await web3Geth.Miner.Start.SendRequestAsync();
              Assert.False(mined);
@@ -82,13 +82,13 @@ namespace ContractTests
             var backupAddressFunction = contract.GetFunction("backupAddress");
             var contractBackupAddress = await backupAddressFunction.CallAsync<string>();
 
-            var expirationDateFunction = contract.GetFunction("expirationDate");
-            var contractExpirationDate = await expirationDateFunction.CallAsync<int>();
+            var inactivePeriodFunction = contract.GetFunction("inactivePeriod");
+            var contractInactivePeriod = await inactivePeriodFunction.CallAsync<int>();
 
             Assert.True(contract != null);
             Assert.Equal(bounty, contractBounty);
             Assert.Equal(BackupAddress, contractBackupAddress);
-            Assert.Equal(expirationDate, contractExpirationDate);
+            Assert.Equal(inactivePeriod, contractInactivePeriod);
         }
     }
 }

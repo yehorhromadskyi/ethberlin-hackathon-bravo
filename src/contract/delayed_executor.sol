@@ -6,6 +6,8 @@ contract DelayedExecutor
     uint public bounty;
     uint public expirationTime;
 
+    bool public isAlive;
+
     constructor(
         address _backupAddress, 
         uint _bounty, 

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContractTests", "ContractTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DutchX_Integration", "..\DutchX_Integration\DutchX_Integration.csproj", "{6E18F2C4-0E81-4B0D-8ECA-69DC2D9A1100}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DutchX_IntegrationTest", "..\DutchX_IntegrationTest\DutchX_IntegrationTest.csproj", "{C082B224-1DA0-4393-B177-16B54CF40E57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DutchX_IntegrationTest", "..\DutchX_IntegrationTest\DutchX_IntegrationTest.csproj", "{C082B224-1DA0-4393-B177-16B54CF40E57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

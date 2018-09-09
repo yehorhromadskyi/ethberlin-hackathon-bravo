@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Xunit;
 using Nethereum.Geth;
 using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
@@ -11,7 +9,7 @@ using Nethereum.Web3.Accounts.Managed;
 using Nethereum.ABI;
 using System.Threading;
 
-namespace ContractTests
+namespace Utils
 {
     public static class Miner
     {

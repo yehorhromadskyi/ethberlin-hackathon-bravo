@@ -30,13 +30,28 @@ Task("Clean")
             Configuration = configuration
         };
 
-        DotNetCoreClean("./", settings);
-        CleanDirectory(Directory("bin"));
-        CleanDirectory(Directory("obj"));
+        DotNetCoreClean("./ExecutorTests/ExecutorTests.csproj", settings);
+        DotNetCoreClean("./FactoryTests/FactoryTests.csproj", settings);
+        DotNetCoreClean("./Shared/Utils.csproj", settings);
+        CleanDirectory(Directory("compiled"));
+    });
+
+Task("Build")
+    .IsDependentOn("Clean")
+    .Does(() => 
+    {
+        var settings = new DotNetCoreBuildSettings
+        {
+            Configuration = configuration
+        };
+
+        DotNetCoreBuild("./ExecutorTests/ExecutorTests.csproj", settings);
+        DotNetCoreBuild("./FactoryTests/FactoryTests.csproj", settings);
+        DotNetCoreBuild("./Shared/Utils.csproj", settings);
     });
 
 Task("Compile-contract")
-    .IsDependentOn("Clean")
+    .IsDependentOn("Build")
     .Does(() => 
     {
         Information("Run compile.js\r\n");
@@ -78,7 +93,8 @@ Task("Run-tests")
             Configuration = configuration
         };
 		
-        DotNetCoreTest("./", settings);
+        DotNetCoreTest("./ExecutorTests/ExecutorTests.csproj", settings);
+        DotNetCoreTest("./FactoryTests/FactoryTests.csproj", settings);
 		
 		// exit geth
         process.StandardInput.WriteLine("exit");

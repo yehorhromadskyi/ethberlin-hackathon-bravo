@@ -11,25 +11,27 @@ using Nethereum.Web3.Accounts.Managed;
 using Nethereum.ABI;
 using System.Threading;
 using Nethereum.Web3;
+using Utils;
 
-namespace ContractTests
+namespace FactoryTests
 {
-    public class DeployTests
+    public class ExecutorFactoryTests
     {
         Web3Geth _web3Geth;
 
         ContractInfo _contractInfo;
 
-        public DeployTests()
+        public ExecutorFactoryTests()
         {
-            var currentDirectory = Environment.CurrentDirectory;
-            while (!currentDirectory.EndsWith("bin"))
+            var contractDirectory = Environment.CurrentDirectory;
+            while (!contractDirectory.EndsWith("contract"))
             {
-                currentDirectory = Directory.GetParent(currentDirectory).FullName;
+                contractDirectory = Directory.GetParent(contractDirectory).FullName;
             }
 
-            var abif = Directory.GetFiles(currentDirectory).First(f => f.EndsWith("DelayedExecutorFactory.abi"));
-            var binf = Directory.GetFiles(currentDirectory).First(f => f.Contains("DelayedExecutorFactory.bin"));
+            var compiledDirectory = Directory.GetDirectories(contractDirectory).FirstOrDefault(d => d.EndsWith("compiled"));
+            var abif = Directory.GetFiles(compiledDirectory).First(f => f.EndsWith("DelayedExecutorFactory.abi"));
+            var binf = Directory.GetFiles(compiledDirectory).First(f => f.Contains("DelayedExecutorFactory.bin"));
 
             _contractInfo = new ContractInfo
             {
@@ -58,11 +60,11 @@ namespace ContractTests
             var createExecutorFunction = contract.GetFunction("createExecutor");
 
             var gas = await createExecutorFunction.EstimateGasAsync(
-                Credentials.BackupAddress, inactivePeriod, bounty);
+                Credentials.Sender, Credentials.BackupAddress, inactivePeriod, bounty);
 
             var txHash = await createExecutorFunction.SendTransactionAsync(
                 Credentials.Sender, new HexBigInteger(gas.Value), new HexBigInteger(0),
-                Credentials.BackupAddress, inactivePeriod, bounty);
+                Credentials.Sender, Credentials.BackupAddress, inactivePeriod, bounty);
 
             var receipt = await Miner.MineAndGetReceiptAsync(_web3Geth, txHash);
 

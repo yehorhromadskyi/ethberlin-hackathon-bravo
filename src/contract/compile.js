@@ -2,11 +2,13 @@ const fs = require('fs');
 const solc = require('solc');
 
 var input = {
-	'delayed_executor.sol': fs.readFileSync('./delayed_executor.sol', 'UTF-8'),
-	'delayed_executor_factory.sol': fs.readFileSync('./delayed_executor_factory.sol', 'UTF-8')
+	'safe_math.sol': fs.readFileSync('./contracts/safe_math.sol', 'UTF-8'),
+	'delayed_executor.sol': fs.readFileSync('./contracts/delayed_executor.sol', 'UTF-8'),
+	'delayed_executor_factory.sol': fs.readFileSync('./contracts/delayed_executor_factory.sol', 'UTF-8')
 }
 
 var output = solc.compile({sources: input}, 1)
+console.log(output);
 
 for (var contractName in output.contracts)
 {
@@ -14,8 +16,8 @@ for (var contractName in output.contracts)
 	
 	//console.log(output.contracts[contractName].bytecode);
 	
-	fs.writeFileSync('bin/' + validFileName + '.bin', output.contracts[contractName].bytecode);
-	fs.writeFileSync('bin/' + validFileName + '.abi', output.contracts[contractName].interface);
+	fs.writeFileSync('compiled/' + validFileName + '.bin', output.contracts[contractName].bytecode);
+	fs.writeFileSync('compiled/' + validFileName + '.abi', output.contracts[contractName].interface);
 
 	//console.log('Writing ' + validFileName);
 }

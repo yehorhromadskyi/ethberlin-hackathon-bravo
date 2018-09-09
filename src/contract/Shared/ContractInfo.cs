@@ -1,4 +1,4 @@
-namespace ContractTests
+namespace Utils
 {
     public class ContractInfo
     {

@@ -21,6 +21,7 @@ class TerminalViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("TerminalViewController loaded")
         
         getNetworkStatus()
     }
@@ -39,6 +40,9 @@ class TerminalViewController: UIViewController {
         executeTransaction()
     }
     
+    @IBAction func clearTerminalButtonPressed(_ sender: Any) {
+        teminalTextView.text = ""
+    }
     
     // MARK: - EthereumInteractor actions
     

@@ -110,9 +110,7 @@ class EthereumInteractor {
                 )
                 
                 transactionExecutionResult.append("\n" + "Signing transaction")
-                let chainId = BigUInt(try self.web3.net.version().wait()) ?? 0 // FIXME: Is it possible to not use '.wait'? because looks like nail
-                transactionExecutionResult.append("\n" + "Current chain ID: \(chainId)")
-                return try transaction.sign(with: privateKey, chainId: EthereumQuantity(quantity: chainId)).promise
+                return try transaction.sign(with: privateKey, chainId: 4).promise
             }.then { pendingTransaction -> Promise<EthereumData> in
                 transactionExecutionResult.append("\n" + "Sending transaction")
                 return self.web3.eth.sendRawTransaction(transaction: pendingTransaction)

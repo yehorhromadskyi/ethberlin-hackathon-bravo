@@ -30,7 +30,7 @@ class AvailableBountiesViewController: UIViewController, UITableViewDelegate {
         loadBounties()
     }
     
-    func loadBounties() {
+    func loadBounties() { // fake data until back-end is connected
         availableBounties.removeAll()
         
         for _ in 1...15 {
@@ -40,7 +40,7 @@ class AvailableBountiesViewController: UIViewController, UITableViewDelegate {
                               "\(arc4random_uniform(256))." +
                               "\(arc4random_uniform(256))"
             fakeBountie.address = "\(String.randomAlphaNumericString(length: 32))"
-            fakeBountie.ethAmount = "\(arc4random_uniform(100))"
+            fakeBountie.ethAmount = "\(Double(arc4random_uniform(100))/100)"
             fakeBountie.date = "\(Calendar.current.date(byAdding: .day, value: -Int(arc4random_uniform(365)), to: Date())!)"
             
             availableBounties.append(fakeBountie)

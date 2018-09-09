@@ -2,7 +2,8 @@ const fs = require('fs');
 const solc = require('solc');
 
 var input = {
-	'delayed_executor': fs.readFileSync('./delayed_executor.sol', 'UTF-8')
+	'delayed_executor.sol': fs.readFileSync('./delayed_executor.sol', 'UTF-8'),
+	'delayed_executor_factory.sol': fs.readFileSync('./delayed_executor_factory.sol', 'UTF-8')
 }
 
 var output = solc.compile({sources: input}, 1)

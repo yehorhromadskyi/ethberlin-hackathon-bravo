@@ -1,6 +1,6 @@
 namespace ContractTests
 {
-    public class Contract
+    public class ContractInfo
     {
         public string Abi { get; set; }
 

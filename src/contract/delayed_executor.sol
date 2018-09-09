@@ -3,20 +3,22 @@ pragma solidity ^0.4.24;
 contract DelayedExecutor
 {
     address public backupAddress;
-    uint public bounty;
-    uint public expirationTime;
+    uint256 public inactivePeriod;
+    uint256 public bounty;
+    uint256 public lastActivity;
 
     bool public isAlive;
 
     constructor(
-        address _backupAddress, 
-        uint _bounty, 
-        uint _expirationTime)
+        address _backupAddress,
+        uint256 _inactivePeriod,
+        uint256 _bounty)
+        public
     {
         backupAddress = _backupAddress;
+        inactivePeriod = _inactivePeriod;
         bounty = _bounty;
-        expirationTime = _expirationTime;
 
-        // assert(bounty > 0);
+        assert(bounty > 0);
     }
 }

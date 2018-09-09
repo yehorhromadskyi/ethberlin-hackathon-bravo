@@ -2,10 +2,12 @@
 
 # Config
 DX_SERVICE_VERSION=staging # Check: https://hub.docker.com/r/gnosispm/dx-services/tags/
-MNEMONIC="super secret thing that nobody should know"
-MARKETS=WETH-RDN
+MNEMONIC="october phone brush bracket floor all lazy attend lift arrest tomato suggest" #"super secret thing that nobody should know"
+MARKETS=WETH-RDN,WETH-CWBR
 RDN_TOKEN_ADDRESS=0x3615757011112560521536258c1e7325ae3b48ae
 OMG_TOKEN_ADDRESS=0x00df91984582e6e96288307e9c2f20b38c8fece9
+#SNM_TOKEN_ADDRESS=0xa2498b16a8fe7cd997f278d2419e3aa3b2b5854c #it's easier to use ones own token on rinkeby
+CWBR_TOKEN_ADDRESS=0xf30396d65fbbb29b90d8c2f8bc489bca3446d6b1 #our own token:)
 ETHEREUM_RPC_URL=https://rinkeby.infura.io
 NETWORK=rinkeby
 ENVIRONMENT=pre # local, pre, pro
@@ -40,10 +42,10 @@ docker run \
   -e MARKETS=$MARKETS \
   -e RDN_TOKEN_ADDRESS=$RDN_TOKEN_ADDRESS \
   -e OMG_TOKEN_ADDRESS=$OMG_TOKEN_ADDRESS \
+  -e CWBR_TOKEN_ADDRESS=$CWBR_TOKEN_ADDRESS \
   -e ETHEREUM_RPC_URL=$ETHEREUM_RPC_URL \
   -e NODE_ENV=$ENVIRONMENT \
   -e DEBUG=$DEBUG_MESSAGES \
-  -e NODE_ENV=$ENVIRONMENT \
   -e DEBUG_COLORS=$SHOW_COLORS \
   $DOCKER_IMAGE \
   $APP_COMMAND
